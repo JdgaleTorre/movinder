@@ -13,28 +13,44 @@ export default async function Home() {
   return (
     <HydrateClient>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Movinder
-          </h1>
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
-              <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-              >
-                {session ? "Sign out" : "Sign in"}
-              </Link>
-            </div>
+        <div className="container flex flex-col items-center justify-center gap-9 px-4 py-10">
+          <div className="flex flex-row gap-5 items-center justify-between w-full">
+            <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+              Movinder
+            </h1>
+            {session?.user && (
+              <div className="text-center text-2xl text-white">
+                {session.user.image && (
+                  <div className="flex size-16 items-center justify-center rounded-full bg-white">
+                    <img
+                      className="size-12 rounded-full"
+                      src={session.user.image}
+                      alt="profile picture"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
+          {session == null && (
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-4">
+                <Link
+                  href={session ? "/api/auth/signout" : "/api/auth/signin"}
+                  className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                >
+                  {session ? "Sign out" : "Sign in"}
+                </Link>
+              </div>
+            </div>
+          )}
 
           {session?.user && (
-            <Suspense fallback={<img src="/rings.svg" className="w-48" />}>
-              <MovieVote />
-            </Suspense>
+            <div className="flex flex-col items-stretch justify-center w-[400px] h-[750px]">
+              <Suspense fallback={<img src="/rings.svg" className="w-[400px]" />}>
+                <MovieVote />
+              </Suspense>
+            </div>
           )}
         </div>
       </main>

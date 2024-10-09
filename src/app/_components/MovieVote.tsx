@@ -33,7 +33,7 @@ export default async function MovieVote() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-5">
       {randomMovie ? (
         <>
           <div className="flex flex-col items-center justify-center">
