@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "MovieVote" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "movieId" INTEGER NOT NULL,
+    "vote" INTEGER NOT NULL,
+    "createdById" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "MovieVote_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
