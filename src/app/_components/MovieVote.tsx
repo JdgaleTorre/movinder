@@ -50,7 +50,7 @@ export default function MovieVote() {
                 width={300}
                 height={450}
               />
-              <div className="text-2xl sm:text-[5rem]">{randomMovie.title}</div>
+              <div className="text-[2rem] lg:text-[2rem]">{randomMovie.title}</div>
             </div>
           )}
         </div>
