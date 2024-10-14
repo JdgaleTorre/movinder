@@ -7,7 +7,7 @@ import CircularButton from "./circularButton";
 import { CircleX, EyeOff, ThumbsUp } from "lucide-react";
 
 export default function MovieVote() {
-  let [randomMovie, movieQuery] = api.movie.getRandomMovie.useSuspenseQuery();
+  const [randomMovie] = api.movie.getRandomMovie.useSuspenseQuery();
   const [isLoading, setIsLoading] = useState(false)
   const utils = api.useUtils();
   const createVote = api.movieVote.movie_vote.useMutation({
@@ -56,7 +56,8 @@ export default function MovieVote() {
         </div>
       )}
       {isLoading && (
-        <img src="/rings.svg" className="w-[400px] h-[632px] min-w-[400px] max-w-screen-md" />
+        <Image src={`/rings.svg`} width={400} height={632} alt="Loading" />
+        // <img src="/rings.svg" className="w-[400px] h-[632px] min-w-[400px] max-w-screen-md" />
 
       )}
       <div className="flex gap-20">
