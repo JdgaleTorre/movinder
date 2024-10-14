@@ -50,13 +50,15 @@ export default function MovieVote() {
                 width={300}
                 height={450}
               />
-              <div className="text-[2rem] lg:text-[2rem]">{randomMovie.title}</div>
+              <div className="text-[2rem] lg:text-[2rem]">{randomMovie.title.length > 20 ? randomMovie.title.substring(0, 20) + "..." : randomMovie.title}</div>
             </div>
           )}
         </div>
       )}
       {isLoading && (
-        <Image src={`/rings.svg`} width={300} height={450} alt="Loading" />
+        <div className="w-[300px] h-[500px] flex items-center justify-center">
+          <Image src={`/rings.svg`} width={300} height={450} alt="Loading" />
+        </div>
         // <img src="/rings.svg" className="w-[400px] h-[632px] min-w-[400px] max-w-screen-md" />
 
       )}

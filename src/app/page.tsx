@@ -41,7 +41,7 @@ export default async function Home() {
 
           {session?.user && (
             <div className="flex flex-col items-stretch justify-center top-15">
-              <Suspense fallback={<img src="/rings.svg" className="w-[400px]" />}>
+              <Suspense fallback={<img src="/rings.svg" className="w-[300px] h-[450px]" />}>
                 <MovieVote />
               </Suspense>
             </div>
