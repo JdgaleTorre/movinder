@@ -24,7 +24,7 @@ type Movie = {
 };
 
 const fillMovies = async () => {
-  const csvFilePath = path.resolve("./scripts/Movies.csv");
+  const csvFilePath = path.resolve("./Movies.csv");
 
   const headers = [
     "movieId",
@@ -66,8 +66,8 @@ const fillMovies = async () => {
         movie.vote_average = Number(movie.vote_average);
         movie.vote_count = Number(movie.vote_count);
         movie.popularity = Number(movie.popularity);
-        movie.adult = movie.adult === "TRUE" || movie.adult === "1"; // Convert to boolean
-        movie.video = movie.video === "TRUE" || movie.video === "1"; // Convert to boolean
+        // movie.adult = movie.adult === "TRUE" || movie.adult === "1"; // Convert to boolean
+        // movie.video = movie.video === "TRUE" || movie.video === "1"; // Convert to boolean
 
         // console.log(movie.movieId)
       });
