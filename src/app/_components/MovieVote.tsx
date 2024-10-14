@@ -43,20 +43,20 @@ export default function MovieVote() {
       {randomMovie && !isLoading && (
         <div className="flex flex-col items-center justify-center">
           {randomMovie && (
-            <div className="flex flex-col items-center justify-center min-w-[400px] max-w-screen-md h-[632px]">
+            <div className="flex flex-col items-center justify-center">
               <Image
-                src={`https://image.tmdb.org/t/p/w400${randomMovie.poster_path}`}
+                src={`https://image.tmdb.org/t/p/w300${randomMovie.poster_path}`}
                 alt="Poster"
-                width={400}
-                height={600}
+                width={300}
+                height={450}
               />
-              <div className="text-2xl">{randomMovie.title}</div>
+              <div className="text-2xl sm:text-[5rem]">{randomMovie.title}</div>
             </div>
           )}
         </div>
       )}
       {isLoading && (
-        <Image src={`/rings.svg`} width={400} height={632} alt="Loading" />
+        <Image src={`/rings.svg`} width={300} height={450} alt="Loading" />
         // <img src="/rings.svg" className="w-[400px] h-[632px] min-w-[400px] max-w-screen-md" />
 
       )}

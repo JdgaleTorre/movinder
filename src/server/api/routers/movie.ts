@@ -58,9 +58,11 @@ export const movieRouter = createTRPCRouter({
     let movieNumber: number;
     let movieVotedUser: MovieVote | null;
 
+    const TotalMovies = 1440;
+
     do {
 
-      movieNumber = Math.floor(Math.random() * 3600) + 1;
+      movieNumber = Math.floor(Math.random() * TotalMovies) + 1;
       movieVotedUser = await ctx.db.movieVote.findFirst({
         where: { movieId: movieNumber, createdById: ctx.session?.user.id }
       })
@@ -71,7 +73,6 @@ export const movieRouter = createTRPCRouter({
       where: { id: movieNumber },
     });
 
-    // setTimeout(() => {}, 1888000);
     return movie ?? null;
   }),
 });

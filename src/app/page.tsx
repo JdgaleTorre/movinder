@@ -14,15 +14,15 @@ export default async function Home() {
   return (
     <HydrateClient>
       <main className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-9 px-4 py-10">
-          <div className="flex flex-row gap-5 items-center justify-between min-w-[400px] max-w-screen-md absolute top-4">
-            <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-              Movinder
-            </h1>
-            {session?.user.name && session?.user.image && (
-              <ProfileMenu name={session.user.name} image={session.user.image} />
-            )}
-          </div>
+        <div className="flex flex-row gap-10 items-center justify-betweens sm:w-full md:w-full ">
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+            Movinder
+          </h1>
+          {session?.user.name && session?.user.image && (
+            <ProfileMenu name={session.user.name} image={session.user.image} />
+          )}
+        </div>
+        <div className="container flex flex-col items-center justify-center gap-9 px-4 py-4">
           {session == null && (
             <div className="flex flex-col items-center gap-2">
               <p className="w-2/3 py-5 text-center text-xl">
@@ -40,7 +40,7 @@ export default async function Home() {
           )}
 
           {session?.user && (
-            <div className="flex flex-col items-stretch justify-center w-[400px] h-[750px] top-10">
+            <div className="flex flex-col items-stretch justify-center top-15">
               <Suspense fallback={<img src="/rings.svg" className="w-[400px]" />}>
                 <MovieVote />
               </Suspense>
