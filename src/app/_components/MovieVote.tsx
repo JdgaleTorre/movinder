@@ -68,7 +68,7 @@ export default function MovieVote() {
         <CircularButton onClick={notSeenMovie} icon={<EyeOff className="h-6 w-6" />}
           label="Not Seen" disabled={isLoading} />
         <CircularButton onClick={() => voteMovie(true)} icon={<ThumbsUp className="h-6 w-6" />}
-          label="Not Like" disabled={isLoading} />
+          label="Like" disabled={isLoading} />
       </div>
     </div>
   );
