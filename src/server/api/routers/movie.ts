@@ -1,4 +1,4 @@
-import { Movie } from "@prisma/client";
+import { Movie, MovieVote } from "@prisma/client";
 import { time } from "console";
 import { z } from "zod";
 
@@ -55,7 +55,18 @@ export const movieRouter = createTRPCRouter({
       });
     }),
   getRandomMovie: publicProcedure.query(async ({ ctx }) => {
-    const movieNumber: number = Math.floor(Math.random() * 3600) + 1;
+    let movieNumber: number;
+    let movieVotedUser: MovieVote | null;
+
+    do {
+
+      movieNumber = Math.floor(Math.random() * 3600) + 1;
+      movieVotedUser = await ctx.db.movieVote.findFirst({
+        where: { movieId: movieNumber, createdById: ctx.session?.user.id }
+      })
+    } while (movieVotedUser != null)
+
+
     const movie = await ctx.db.movie.findFirst({
       where: { id: movieNumber },
     });

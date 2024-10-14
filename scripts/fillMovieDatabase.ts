@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { parse } from "csv-parse";
-import { db } from "../src/server/db";
+import { db } from "~/server/db";
 
 type Movie = {
   movieId: number;

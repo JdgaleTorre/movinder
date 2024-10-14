@@ -27,7 +27,7 @@ model Post {
 }
 
 model Movie {
-  id                Int     @id @default(autoincrement())
+  id                Int         @id @default(autoincrement())
   movieId           Int
   title             String
   original_title    String
@@ -45,16 +45,19 @@ model Movie {
   video             Boolean
   cast              String
   direct            String
+  MovieVote         MovieVote[]
 }
 
 model MovieVote {
   id          Int    @id @default(autoincrement())
   movieId     Int
+  movie       Movie  @relation(fields: [movieId], references: [id])
   vote        Int
   createdBy   User   @relation(fields: [createdById], references: [id])
   createdById String
 
   createdAt DateTime @default(now())
+
   @@unique([movieId, createdById])
 }
 
