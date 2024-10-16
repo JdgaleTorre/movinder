@@ -25,4 +25,27 @@ export const movieVoteRouter = createTRPCRouter({
         },
       });
     }),
+  get_votes_user: protectedProcedure
+    .query(async ({ ctx }) => {
+      const movies = await ctx.db.movieVote.findMany({
+        orderBy: { createdAt: "desc" },
+        where: { createdBy: { id: ctx.session.user.id } },
+        include: {
+          movie: true
+        }
+      });
+
+      return movies ?? null;
+    }),
+  update_movie_vote: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      vote: z.number(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.movieVote.update({
+        where: { id: input.id, createdById: ctx.session.user.id },
+        data: { vote: input.vote }
+      })
+    })
 });

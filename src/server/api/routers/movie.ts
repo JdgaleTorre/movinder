@@ -58,7 +58,12 @@ export const movieRouter = createTRPCRouter({
     let movieNumber: number;
     let movieVotedUser: MovieVote | null;
 
-    const TotalMovies = 1440;
+    const TotalMovies = await ctx.db.movie.count();
+    const MoviesVoted = await ctx.db.movieVote.count({ where: { createdById: ctx.session?.user.id } })
+
+    if (TotalMovies === MoviesVoted) {
+      return null;
+    }
 
     do {
 

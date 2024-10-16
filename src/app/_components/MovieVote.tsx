@@ -3,12 +3,17 @@
 import Image from "next/image";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
-import CircularButton from "./circularButton";
-import { CircleX, EyeOff, ThumbsUp } from "lucide-react";
+import { Star } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { MAX_LENGTH_TITLE_MOB } from "~/utils/constant";
 
 export default function MovieVote() {
   const [randomMovie] = api.movie.getRandomMovie.useSuspenseQuery();
   const [isLoading, setIsLoading] = useState(false)
+  const [rating, setRating] = useState(0)
+  const [hoveredRating, setHoveredRating] = useState(0)
+  const MAX_RATING = 5;
+
   const utils = api.useUtils();
   const createVote = api.movieVote.movie_vote.useMutation({
     onSuccess: async () => {
@@ -16,59 +21,84 @@ export default function MovieVote() {
     },
   });
 
-  // const refreshMovie = async () => {
-  //   randomMovie = await api.movie.getRandomMovie();
-  // };
-
   useEffect(() => {
     setIsLoading(false)
+    setRating(0);
+    setHoveredRating(0)
   }, [randomMovie]);
 
-  async function voteMovie(liked: boolean): Promise<void> {
+  async function voteMovie(vote: number): Promise<void> {
+    if (isLoading) return;
     setIsLoading(true)
     if (randomMovie) {
-      createVote.mutate({ movieId: randomMovie?.id, vote: liked ? 1 : 0 });
-    }
-  }
-
-  function notSeenMovie(): void {
-    setIsLoading(true)
-    if (randomMovie) {
-      createVote.mutate({ movieId: randomMovie?.id, vote: -1 });
+      createVote.mutate({ movieId: randomMovie?.id, vote: vote });
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-center gap-2">
       {randomMovie && !isLoading && (
         <div className="flex flex-col items-center justify-center">
           {randomMovie && (
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center rounded-md shadow-lg">
               <Image
                 src={`https://image.tmdb.org/t/p/w300${randomMovie.poster_path}`}
                 alt="Poster"
                 width={300}
                 height={450}
+                className="rounded-lg shadow-lg"
               />
-              <div className="text-[2rem] lg:text-[2rem]">{randomMovie.title.length > 20 ? randomMovie.title.substring(0, 20) + "..." : randomMovie.title}</div>
             </div>
           )}
         </div>
       )}
       {isLoading && (
-        <div className="w-[300px] h-[500px] flex items-center justify-center">
+        <div className="w-[300px] h-[450px] flex items-center justify-center">
           <Image src={`/rings.svg`} width={300} height={450} alt="Loading" />
         </div>
-        // <img src="/rings.svg" className="w-[400px] h-[632px] min-w-[400px] max-w-screen-md" />
-
       )}
-      <div className="flex gap-20">
-        <CircularButton onClick={() => voteMovie(false)} icon={<CircleX className="h-6 w-6" />}
-          label="Not Like" disabled={isLoading} />
-        <CircularButton onClick={notSeenMovie} icon={<EyeOff className="h-6 w-6" />}
-          label="Not Seen" disabled={isLoading} />
-        <CircularButton onClick={() => voteMovie(true)} icon={<ThumbsUp className="h-6 w-6" />}
-          label="Like" disabled={isLoading} />
+      {randomMovie == null && (
+        <p className="w-2/3 py-5 text-center text-xl">
+          There is no more movies to vote.
+        </p>
+      )}
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col justify-center space-x-1">
+          {/* text-muted-foreground */}
+          <p className="mb-2 text-center text-sm">
+            Rate {randomMovie?.title && randomMovie.title.length > MAX_LENGTH_TITLE_MOB ?
+              randomMovie?.title.substring(0, MAX_LENGTH_TITLE_MOB) + "..." :
+              randomMovie?.title}:
+          </p>
+          <div className="flex flex-row justify-center">
+
+            {[...Array(MAX_RATING)].map((_, index) => (
+              <Star
+                key={index}
+                className={`h-8 w-8 cursor-pointer ${index < (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                  }`}
+                onClick={() => {
+                  setRating(index + 1)
+                  voteMovie(index + 1)
+                }}
+                onMouseEnter={() => setHoveredRating(index + 1)}
+                onMouseLeave={() => setHoveredRating(0)}
+                aria-disabled={isLoading}
+              />
+            ))}
+          </div>
+          <p className="mt-2 text-center text-lg font-semibold">{rating} / {MAX_RATING}</p>
+        </div>
+        <div className="flex">
+          <Button
+            // variant="outline"
+            className="flex-1"
+            onClick={() => voteMovie(0)}
+            disabled={isLoading}
+          >
+            Skip
+          </Button>
+        </div>
       </div>
     </div>
   );
