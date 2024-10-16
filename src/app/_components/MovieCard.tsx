@@ -35,6 +35,7 @@ function MovieCard({ movie }: { movie: MovieVoteList }) {
             )}
             <div className='w-24 h-full absolute left-0 top-0'>
                 <Image
+                    unoptimized
                     src={`https://image.tmdb.org/t/p/w200${movie.movie.poster_path}`}
                     alt="Poster"
                     width={100}

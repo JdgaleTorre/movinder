@@ -42,6 +42,7 @@ export default function MovieVote() {
           {randomMovie && (
             <div className="flex flex-col items-center justify-center rounded-md shadow-lg">
               <Image
+                unoptimized
                 src={`https://image.tmdb.org/t/p/w300${randomMovie.poster_path}`}
                 alt="Poster"
                 width={300}
