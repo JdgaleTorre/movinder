@@ -5,14 +5,14 @@ import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { MAX_LENGTH_TITLE_MOB } from "~/utils/constant";
+import { MAX_LENGTH_TITLE_MOB, MAX_RATING } from "~/utils/constant";
 
 export default function MovieVote() {
   const [randomMovie] = api.movie.getRandomMovie.useSuspenseQuery();
   const [isLoading, setIsLoading] = useState(false)
   const [rating, setRating] = useState(0)
   const [hoveredRating, setHoveredRating] = useState(0)
-  const MAX_RATING = 5;
+  const starArr = Array.from({ length: MAX_RATING });
 
   const utils = api.useUtils();
   const createVote = api.movieVote.movie_vote.useMutation({
@@ -27,7 +27,7 @@ export default function MovieVote() {
     setHoveredRating(0)
   }, [randomMovie]);
 
-  async function voteMovie(vote: number): Promise<void> {
+  const voteMovie = (vote: number) => {
     if (isLoading) return;
     setIsLoading(true)
     if (randomMovie) {
@@ -72,7 +72,7 @@ export default function MovieVote() {
           </p>
           <div className="flex flex-row justify-center">
 
-            {[...Array(MAX_RATING)].map((_, index) => (
+            {starArr.map((_, index) => (
               <Star
                 key={index}
                 className={`h-8 w-8 cursor-pointer ${index < (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"

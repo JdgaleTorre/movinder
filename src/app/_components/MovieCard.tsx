@@ -1,8 +1,8 @@
 'use client'
-import { Movie, MovieVote } from '@prisma/client';
+import { type Movie, type MovieVote } from '@prisma/client';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '~/trpc/react';
 import { MAX_LENGTH_TITLE_MOB, MAX_RATING } from '~/utils/constant';
 import { Badge } from "~/components/ui/badge"
@@ -12,12 +12,12 @@ type MovieVoteList = MovieVote & { movie: Movie }
 function MovieCard({ movie }: { movie: MovieVoteList }) {
     const [rating, setRating] = useState(movie.vote)
     const [hoveredRating, setHoveredRating] = useState(0)
+    const starArr = Array.from({ length: MAX_RATING });
     const mutationVote = api.movieVote.update_movie_vote.useMutation({
         onSuccess: async () => {
             await api.useUtils().movieVote.invalidate();
         },
     });
-
 
     const updateVote = (vote: number) => {
         mutationVote.mutate({ id: movie.id, vote: vote })
@@ -47,8 +47,7 @@ function MovieCard({ movie }: { movie: MovieVoteList }) {
                     {movie.movie.title.length > MAX_LENGTH_TITLE_MOB ? movie.movie.title.substring(0, MAX_LENGTH_TITLE_MOB) + '...' : movie.movie.title}
                 </h3>
                 <div className="flex flex-row justify-center">
-
-                    {[...Array(MAX_RATING)].map((_, index) => (
+                    {starArr.map((_, index) => (
                         <Star
                             key={index}
                             className={`h-8 w-8 cursor-pointer ${index < (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
