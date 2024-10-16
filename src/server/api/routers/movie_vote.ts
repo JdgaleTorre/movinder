@@ -1,11 +1,8 @@
-import { Movie } from "@prisma/client";
-import { time } from "console";
 import { z } from "zod";
 
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
 
 export const movieVoteRouter = createTRPCRouter({

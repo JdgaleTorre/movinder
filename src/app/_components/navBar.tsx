@@ -24,7 +24,7 @@ export default function Navbar({ name, image }: { name: string | null | undefine
                             <Button variant="ghost" className="relative h-14 w-14 rounded-full bg-white">
                                 <Avatar className="h-12 w-12">
                                     <AvatarImage src={image} alt="@user" />
-                                    <AvatarFallback>U</AvatarFallback>
+                                    <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>

@@ -1,5 +1,4 @@
-import { Movie, MovieVote } from "@prisma/client";
-import { time } from "console";
+import { type MovieVote } from "@prisma/client";
 import { z } from "zod";
 
 import {
