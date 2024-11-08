@@ -37,7 +37,7 @@ const exportToCsv = (filename: string, rows: Array<tempMovieVote>, headers?: str
                         return row[k].toISOString().replace('T', '').replace('Z', '');
                     case 'movieTitle':
                         const title = row[k].toString().replace(/"/g, '""');
-                        if (title.search(',') > 1) return `"${title}"`;
+                        if (title.search(',') > 0) return `"${title}"`;
                         return title;
                     default:
                         return row[k].toString().replace(/"/g, '""');
@@ -63,7 +63,7 @@ const collectVotes = async () => {
     //loop through movie votes and create a new array with the movieId, createdById, createdAt and vote value
     for (const movieVote of MovieVotes) {
         const vote = {
-            movieId: movieVote.movie.id,
+            movieId: movieVote.movie.movieId,
             movieTitle: movieVote.movie.title,
             createdById: movieVote.createdById,
             createdAt: movieVote.createdAt,

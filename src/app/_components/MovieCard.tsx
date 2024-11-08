@@ -51,8 +51,7 @@ function MovieCard({ movie }: { movie: MovieVoteList }) {
                     {starArr.map((_, index) => (
                         <Star
                             key={index}
-                            className={`h-8 w-8 cursor-pointer ${index < (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                                }`}
+                            className={`h-8 w-8 cursor-pointer ${index < (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                             onClick={() => {
                                 setRating(index + 1)
                                 updateVote(index + 1)
