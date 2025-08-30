@@ -2,6 +2,11 @@ import { postRouter } from "~/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { movieRouter } from "./routers/movie";
 import { movieVoteRouter } from "./routers/movie_vote";
+import { type inferRouterOutputs } from "@trpc/server";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+export type MovieByIdOutput = RouterOutput["movie"]["getMovie"];
 
 /**
  * This is the primary router for your server.

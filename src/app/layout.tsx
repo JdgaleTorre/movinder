@@ -24,25 +24,11 @@ export default async function RootLayout({
       <body>
         <TRPCReactProvider>
           <HydrateClient>
-            <div className="relative">
+            <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background dark:bg-background-dark dark:text-white">
               <Navbar name={session?.user.name} image={session?.user.image} />
-              {session == null ? (
-                <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white pb-1">
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="w-2/3 py-5 text-center text-xl">
-                      Please Sign In to keep a track of your preferences in movies
-                    </p>
-                    <div className="flex flex-col items-center justify-center gap-4">
-                      <Link
-                        href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                        className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                      >
-                        {session ? "Sign out" : "Sign in"}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ) : <>{children}</>}
+              <div className="">
+                {children}
+              </div>
             </div>
           </HydrateClient>
         </TRPCReactProvider>
@@ -50,3 +36,22 @@ export default async function RootLayout({
     </html>
   );
 }
+
+
+// {session == null ? (
+//                 <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white pb-1">
+//                   <div className="flex flex-col items-center gap-2">
+//                     <p className="w-2/3 py-5 text-center text-xl">
+//                       Please Sign In to keep a track of your preferences in movies
+//                     </p>
+//                     <div className="flex flex-col items-center justify-center gap-4">
+//                       <Link
+//                         href={session ? "/api/auth/signout" : "/api/auth/signin"}
+//                         className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+//                       >
+//                         {session ? "Sign out" : "Sign in"}
+//                       </Link>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ) : <>{children}</>}

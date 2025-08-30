@@ -79,4 +79,19 @@ export const movieRouter = createTRPCRouter({
 
     return movie ?? null;
   }),
+  getPopularMovies: publicProcedure.query(async ({ ctx }) => {
+    const movies = await ctx.db.movie.findMany({
+      orderBy: { vote_count: "desc" },
+      take: 12,
+    });
+
+    return movies ?? null;
+  }),
+  getMovie: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    const movie = await ctx.db.movie.findFirst({
+      where: { id: input },
+    });
+
+    return movie ?? null;
+  }),
 });
