@@ -14,7 +14,8 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "fill-movies": "ts-node scripts/fillMovieDatabase.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",

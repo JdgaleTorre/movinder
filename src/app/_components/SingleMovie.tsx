@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import { api } from "~/trpc/react";
-import { Repeat } from "lucide-react";
+import VoteCircle from "./VoteCircle";
 
 type SingleMoviePageProps = {
     id: number;
@@ -11,6 +11,7 @@ type SingleMoviePageProps = {
 
 const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
     const [movie] = api.movie.getMovie.useSuspenseQuery(id);
+    const [similarMovies] = api.movie.getSimilarMovies.useSuspenseQuery(id);
 
     if (!movie) return <div>Loading...</div>;
 
@@ -32,15 +33,7 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
             </div> */}
 
             {/* Main Content */}
-            <div className="w-full mx-auto p-6" style={{
-                backgroundImage: ` linear-gradient(
-  to right,
-  rgba(255, 255, 255, 0.05) calc((50vw - 170px) - 340px), /* barely visible left edge */
-  rgba(255, 255, 255, 1) 50%,                             /* fully opaque center */
-  rgba(255, 255, 255, 0.05) 100%                           /* barely visible right edge */
-),
-                url(https://image.tmdb.org/t/p/w500${movie?.backdrop_path})`, backgroundSize: "cover", backgroundRepeat: "no-repeat"
-            }}>
+            <div className="container mx-auto px-4 py-6">
                 <div className="max-w-6xl mx-auto  grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Poster */}
                     <div className="flex justify-center items-center">
@@ -57,28 +50,51 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
                     {/* Details */}
                     <div className="md:col-span-2 space-y-4">
                         <h2 className="text-3xl font-bold">{movie?.original_title}</h2>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-600 text-sm">
                             {movie?.genres} | {movie?.original_language.toUpperCase()}
                         </p>
                         <p className="leading-relaxed">{movie?.overview}</p>
 
                         <div className="flex items-center space-x-4">
-                            <div className="relative w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center font-bold text-lg">
-                                {votePercent}%
-                            </div>
-                            <span className="text-gray-300">{movie?.vote_count} votes</span>
+                            <VoteCircle vote={movie.vote_average} />
+                            <span className="text-gray-600">{movie?.vote_count} votes</span>
                         </div>
 
                         <div>
                             <h3 className="text-xl font-semibold mt-4">Directed by</h3>
-                            <p>{movie?.direct}</p>
+                            <p>{movie?.direct.replace("-", " ")}</p>
                         </div>
                         <div>
                             <h3 className="text-xl font-semibold mt-4">Cast</h3>
-                            <p>{movie?.cast}</p>
+                            {movie?.cast.split(" ").slice(0, 10).map(name => (<p key={name}>{name.trim().replace("-", " ")}</p>))}
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <div className="container mx-auto px-4 py-6">
+                <h3 className="text-xl font-semibold">Similar Movies</h3>
+
+                <div className="scrollbar-hidden overflow-x-auto">
+
+                    <div className="flex flex-nowrap space-x-4">
+                        {similarMovies?.map(movie => (
+                            <div key={movie.id} className="flex-shrink-0 w-[250px] rounded-lg overflow-hidden shadow-md">
+                                <Image
+                                    unoptimized
+                                    src={movie.poster_path ? `https://image.tmdb.org/t/p/w250_and_h141_face${movie.poster_path}` : "/fallback.jpg"}
+                                    alt={movie.title ?? "Poster"}
+                                    className="w-full h-[141px] object-cover"
+                                    width={350}
+                                    height={100}
+                                />
+                                <div className="p-4">
+                                    <h4 className="font-semibold">{movie.title}</h4>
+                                    <p className="text-sm text-gray-600">{movie.release_date}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
             </div>

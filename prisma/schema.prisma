@@ -52,6 +52,7 @@ model Movie {
   cast              String
   direct            String
   MovieVote         MovieVote[]
+  combined_features  String @default("")
 }
 
 model MovieVote {

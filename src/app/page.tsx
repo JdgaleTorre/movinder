@@ -1,5 +1,4 @@
 import { api } from "~/trpc/server";
-import MovieVote from "./_components/MovieVote";
 import { Suspense } from "react";
 import Image from "next/image";
 import PopularMovies from "./_components/PopularMovies";
@@ -14,6 +13,7 @@ export default async function Home() {
       <div className="container flex flex-col items-center justify-center gap-9 px-4 py-4">
         <div className="flex flex-col items-stretch justify-center top-15 pt-7">
           <Suspense fallback={<Image src={`/rings.svg`} width={300} height={450} alt="Loading" />}>
+            <h3 className="text-2xl font-bold mb-4 text-center">Popular Movies</h3>
             <PopularMovies />
           </Suspense>
         </div>

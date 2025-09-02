@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { parse } from "csv-parse";
+import { parse } from "csv-parse/sync"; // synchronous parser
 import { db } from "~/server/db";
 
 type Movie = {
@@ -21,64 +21,59 @@ type Movie = {
   video: boolean;
   cast: string;
   direct: string;
+  combined_features: string;
 };
 
 const fillMovies = async () => {
   const csvFilePath = path.resolve("./Movies.csv");
-
-  const headers = [
-    "movieId",
-    "title",
-    "original_title",
-    "genre",
-    "genres",
-    "release_date",
-    "overview",
-    "vote_average",
-    "vote_count",
-    "popularity",
-    "adult",
-    "backdrop_path",
-    "original_language",
-    "poster_path",
-    "video",
-    "cast",
-    "direct",
-  ];
-
   const fileContent = fs.readFileSync(csvFilePath, { encoding: "utf-8" });
 
-  parse(
-    fileContent,
-    {
-      delimiter: ",",
-      columns: headers,
-      fromLine: 2,
-    },
-    async (error, result: Movie[]) => {
-      if (error) {
-        console.error(error);
-      }
 
-      // Cast numbers and booleans appropriately
-      result.forEach((movie) => {
-        movie.movieId = Number(movie.movieId);
-        movie.vote_average = Number(movie.vote_average);
-        movie.vote_count = Number(movie.vote_count);
-        movie.popularity = Number(movie.popularity);
-        // movie.adult = movie.adult === "TRUE" || movie.adult === "1"; // Convert to boolean
-        // movie.video = movie.video === "TRUE" || movie.video === "1"; // Convert to boolean
+  // Parse CSV synchronously
+  const records: Movie[] = parse(fileContent, {
+    columns: true, 
+    skip_empty_lines: true,
+  }) as unknown as Movie[];
 
-        // console.log(movie.movieId)
+  const filtered = records.map((row: Movie) => ({
+    movieId: Number(row.movieId),
+    title: row.title,
+    original_title: row.original_title,
+    genre: row.genre,
+    genres: row.genres,
+    release_date: row.release_date,
+    overview: row.overview,
+    vote_average: Number(row.vote_average) || 0,
+    vote_count: Number(row.vote_count) || 0,
+    popularity: Number(row.popularity) || 0,
+    adult: row.adult === "true" || row.adult === "1",
+    backdrop_path: row.backdrop_path,
+    original_language: row.original_language,
+    poster_path: row.poster_path,
+    video: row.video === "true" || row.video === "1",
+    cast: row.cast,
+    direct: row.direct,
+    combined_features: row.combined_features,
+  }));
+
+  for (const movie of filtered) {
+    // Convert numbers/booleans
+    movie.movieId = Number(movie.movieId);
+    movie.vote_average = Number(movie.vote_average) || 0;
+    movie.vote_count = Number(movie.vote_count) || 0;
+    movie.popularity = Number(movie.popularity) || 0;
+    movie.adult = movie.adult === "true" || movie.adult === "1";
+    movie.video = movie.video === "true" || movie.video === "1";
+
+    try {
+      const created = await db.movie.create({
+        data: movie,
       });
-
-    //   console.log(result.filter((movie)=> Number.isNaN(movie.movieId) ))
-
-        const creation = await db.movie.createMany({data: result});
-
-        console.log(creation)
-    },
-  );
+      console.log(`Inserted: ${created.title} (movieId: ${created.movieId})`);
+    } catch (err: any) {
+      console.error(`Failed to insert movieId ${movie.movieId}: ${err.message}`);
+    }
+  }
 };
 
-fillMovies();
+await fillMovies();

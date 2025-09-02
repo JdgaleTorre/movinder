@@ -1,5 +1,7 @@
 import { type MovieVote } from "@prisma/client";
 import { z } from "zod";
+import { env } from "~/env";
+
 
 import {
   createTRPCRouter,
@@ -89,9 +91,23 @@ export const movieRouter = createTRPCRouter({
   }),
   getMovie: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
     const movie = await ctx.db.movie.findFirst({
-      where: { id: input },
+      where: { movieId: input },
     });
 
     return movie ?? null;
+  }),
+  getSimilarMovies: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    const apiUrl = env.DJANGO_API_URL;
+
+    const res = await fetch(`${apiUrl}/recommendations/${input}/10`);
+    const similarMovies = await res.json() as number[] | null;
+
+    if (!similarMovies) return null;
+
+    const movies = await ctx.db.movie.findMany({
+      where: { movieId: { in: similarMovies } },
+    });
+
+    return movies ?? null;
   }),
 });
