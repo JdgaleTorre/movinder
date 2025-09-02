@@ -46,11 +46,11 @@ const fillMovies = async () => {
     vote_average: Number(row.vote_average) || 0,
     vote_count: Number(row.vote_count) || 0,
     popularity: Number(row.popularity) || 0,
-    // adult: row.adult === "true" || row.adult === "1",
+    adult: row.adult,
     backdrop_path: row.backdrop_path,
     original_language: row.original_language,
     poster_path: row.poster_path,
-    // video: row.video === "true" || row.video === "1",
+    video: row.video,
     cast: row.cast,
     direct: row.direct,
     combined_features: row.combined_features,
@@ -62,8 +62,8 @@ const fillMovies = async () => {
     movie.vote_average = Number(movie.vote_average) || 0;
     movie.vote_count = Number(movie.vote_count) || 0;
     movie.popularity = Number(movie.popularity) || 0;
-    // movie.adult = movie.adult === "true" || movie.adult === "1";
-    // movie.video = movie.video === "true" || movie.video === "1";
+    movie.adult = movie.adult;
+    movie.video = movie.video;
 
     try {
       const created = await db.movie.create({
