@@ -7,7 +7,6 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { HydrateClient } from "~/trpc/server";
 import Navbar from "./_components/navBar";
 import { getServerAuthSession } from "~/server/auth";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Movinder APP",
