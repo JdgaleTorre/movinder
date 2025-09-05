@@ -70,7 +70,7 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
                     </div>
                 </div>
                 <div className="container mx-auto px-4 py-6">
-                    <div className="max-w-6xl mx-auto">
+                    <div className="md:max-w-6xl mx-auto max-w-sm">
 
                         <h3 className="text-xl font-semibold">Similar Movies</h3>
 
