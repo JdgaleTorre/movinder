@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { HydrateClient } from "~/trpc/server";
 import Navbar from "./_components/navBar";
 import { getServerAuthSession } from "~/server/auth";
+import Providers from "./provider";
 
 export const metadata: Metadata = {
   title: "Movinder APP",
@@ -25,9 +26,13 @@ export default async function RootLayout({
           <HydrateClient>
             <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background dark:bg-background-dark dark:text-white">
               <Navbar name={session?.user.name} image={session?.user.image} />
+
               <div className="">
-                {children}
+                <Providers>
+                  {children}
+                </Providers>
               </div>
+
             </div>
           </HydrateClient>
         </TRPCReactProvider>

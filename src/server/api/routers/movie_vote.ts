@@ -40,9 +40,14 @@ export const movieVoteRouter = createTRPCRouter({
       vote: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.movieVote.update({
+      return ctx.db.movieVote.upsert({
         where: { id: input.id, createdById: ctx.session.user.id },
-        data: { vote: input.vote }
+        update: { vote: input.vote },
+        create: {
+          movieId: input.id,
+          vote: input.vote,
+          createdById: ctx.session.user.id,
+        }
       })
     })
 });

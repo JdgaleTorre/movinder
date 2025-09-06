@@ -6,18 +6,18 @@ import MovieCard from "./MovieCard";
 export default function MovieList() {
     const [movies] = api.movieVote.get_votes_user.useSuspenseQuery();
     return (
-        <div className="flex flex-col items-center justify-center gap-2 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hover:cursor-pointer max-w-6xl mx-auto ">
             {movies && (
                 <div className="flex flex-col items-center justify-center w-full max-w-md">
                     {movies?.map((movie, index) => (
                         <MovieCard movie={movie} key={index} />
-                    ))
-                    }
+                    ))}
                 </div>
+
             )}
-            {movies == null && (
+            {movies == null || movies.length == 0 && (
                 <p className="w-2/3 py-5 text-center text-xl">
-                    There is no votes.
+                    There is no ratings to show.
                 </p>
             )}
         </div >

@@ -92,22 +92,46 @@ export const movieRouter = createTRPCRouter({
   getMovie: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
     const movie = await ctx.db.movie.findFirst({
       where: { movieId: input },
+      include: {
+        MovieVote: {
+          where: { createdById: ctx.session?.user.id }
+        }
+      },
     });
 
     return movie ?? null;
   }),
-  getSimilarMovies: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
-    const apiUrl = env.DJANGO_API_URL;
+  getSimilarMovies: publicProcedure
+    .input(z.number())
+    .query(async ({ ctx, input }) => {
+      const apiUrl = env.DJANGO_API_URL;
 
-    const res = await fetch(`${apiUrl}/recommendations/${input}/10`);
-    const similarMovies = await res.json() as number[] | null;
+      try {
+        const res = await fetch(`${apiUrl}/recommendations/${input}/10`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
 
-    if (!similarMovies) return null;
+        if (!res.ok) {
+          console.error("Django API error:", res.status, res.statusText);
+          return null; // gracefully fallback
+        }
 
-    const movies = await ctx.db.movie.findMany({
-      where: { movieId: { in: similarMovies } },
-    });
+        const similarMovies = (await res.json()) as number[] | null;
 
-    return movies ?? null;
-  }),
+        if (!similarMovies || similarMovies.length === 0) {
+          return null;
+        }
+
+        const movies = await ctx.db.movie.findMany({
+          where: { movieId: { in: similarMovies } },
+        });
+
+        return movies ?? null;
+      } catch (err) {
+        console.error("Error calling Django API:", err);
+        return null; // avoid crashing the website
+      }
+    }),
+
 });
