@@ -13,7 +13,7 @@ export default function PopularMovies() {
             {popularMovies?.map(movie => (
                 <div
                     key={movie.id}
-                    className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md  hover:shadow-lg transition duration-300 transform hover:scale-105"
+                    className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md  hover:shadow-lg transition duration-300 transform hover:scale-105 pt-4"
                     onClick={() => {
                         // Handle movie click
                         router.push(`/movie/${movie.movieId}`)

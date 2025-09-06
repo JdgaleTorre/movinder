@@ -70,7 +70,7 @@ function MovieCard({ movie }: { movie: MovieVoteList }) {
                         ))}
                     </div>
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
-                        {movie.movie.title}
+                        {movie.movie.title.length > MAX_LENGTH_TITLE_MOB ? movie.movie.title.substring(0, MAX_LENGTH_TITLE_MOB) + '...' : movie.movie.title}
                     </h3>
                 </div>
             </div>

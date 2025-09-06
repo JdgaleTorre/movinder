@@ -5,10 +5,9 @@ import Image from "next/image";
 import { api } from "~/trpc/react";
 import VoteCircle from "./VoteCircle";
 import { useRouter } from "next/navigation";
-import { MAX_RATING } from '~/utils/constant';
+import { MAX_LENGTH_TITLE_MOB, MAX_RATING } from '~/utils/constant';
 import { Star } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { type MovieVote } from "@prisma/client";
 
 
 type SingleMoviePageProps = {
@@ -119,38 +118,38 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
                     </div>
                 </div>
                 {similarMovies && similarMovies.length > 0 && (
-                    <div className="container mx-auto px-4 py-6">
-                        <div className="md:max-w-6xl mx-auto max-w-sm">
 
-                            <h3 className="text-xl font-semibold">Similar Movies</h3>
+                    <div className="md:max-w-6xl mx-auto max-w-sm container px-4 py-6">
 
-                            <div className="scrollbar-hidden overflow-x-auto overflow-visible">
+                        <h3 className="text-xl font-semibold">Similar Movies</h3>
 
-                                <div className="flex flex-nowrap space-x-4 rounded-lg mb-4 mt-5">
-                                    {similarMovies?.map(movie => (
-                                        <div key={movie.id} className="flex-shrink-0 w-[250px] rounded-lg shadow-md hover:shadow-lg transition duration-300 cursor-pointer hover:scale-105 "
-                                            onClick={() => {
-                                                router.push(`/movie/${movie.movieId}`)
-                                            }}>
-                                            <Image
-                                                unoptimized
-                                                src={movie.poster_path ? `https://image.tmdb.org/t/p/w250_and_h141_face${movie.poster_path}` : "/fallback.jpg"}
-                                                alt={movie.title ?? "Poster"}
-                                                className="w-full h-[141px] object-cover rounded-t-lg "
-                                                width={350}
-                                                height={100}
-                                            />
-                                            <div className="p-4">
-                                                <h4 className="font-semibold">{movie.title}</h4>
-                                                <p className="text-sm text-gray-600">{movie.release_date}</p>
-                                            </div>
+                        <div className="scrollbar-hidden overflow-x-auto overflow-visible">
+
+                            <div className="flex flex-nowrap space-x-4 rounded-lg mb-4 mt-5">
+                                {similarMovies?.map(movie => (
+                                    <div key={movie.id} className="flex-shrink-0 w-[250px] rounded-lg shadow-md hover:shadow-lg transition duration-300 cursor-pointer hover:scale-105 "
+                                        onClick={() => {
+                                            router.push(`/movie/${movie.movieId}`)
+                                        }}>
+                                        <Image
+                                            unoptimized
+                                            src={movie.poster_path ? `https://image.tmdb.org/t/p/w250_and_h141_face${movie.poster_path}` : "/fallback.jpg"}
+                                            alt={movie.title ?? "Poster"}
+                                            className="w-full h-[141px] object-cover rounded-t-lg "
+                                            width={350}
+                                            height={100}
+                                        />
+                                        <div className="p-4">
+                                            <h4 className="font-semibold"> {movie.title.length > MAX_LENGTH_TITLE_MOB ? movie.title.substring(0, MAX_LENGTH_TITLE_MOB) + '...' : movie.title}</h4>
+                                            <p className="text-sm text-gray-600">{movie.release_date}</p>
                                         </div>
-                                    ))}
-                                </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-
                     </div>
+
+
                 )}
             </Suspense>
         </div>
