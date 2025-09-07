@@ -19,6 +19,7 @@ export default function Navbar({ name, image }: { name: string | null | undefine
     }
 
     const toggleSearch = () => {
+        setSearch("")
         setIsSearchActive(!isSearchActive)
     }
 
@@ -47,7 +48,7 @@ export default function Navbar({ name, image }: { name: string | null | undefine
                                     <div className="relative">
                                         <input
                                             type="text"
-                                            placeholder="Search movies..."
+                                            placeholder="Search movies, actor, director or keywords..."
                                             className="w-full px-4 py-3 rounded-lg bg-white/10 text-primary-foreground placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
                                             autoFocus
                                             value={search}
@@ -129,7 +130,7 @@ export default function Navbar({ name, image }: { name: string | null | undefine
                             <div className="relative duration-1000">
                                 <input
                                     type="text"
-                                    placeholder="Search movies..."
+                                    placeholder="Search movies, actor, director or keywords..."
                                     className="w-full px-4 py-3 pr-10 rounded-lg bg-white/10 text-primary-foreground placeholder-white/70 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent"
                                     autoFocus
                                     value={search}

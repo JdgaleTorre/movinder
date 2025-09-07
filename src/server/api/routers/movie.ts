@@ -136,16 +136,17 @@ export const movieRouter = createTRPCRouter({
   searchMovies: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
+      const normalizedInput = input.replace(/\s+/g, "_");
       const movies = await ctx.db.movie.findMany({
         where: {
-          title: {
-            contains: input,
-            mode: "insensitive",
-          },
+          OR: [
+            { title: { contains: input, mode: "insensitive" } },
+            { combined_features: { contains: normalizedInput, mode: "insensitive" } },
+          ],
         },
       });
 
       return movies ?? null;
     }),
-  },
+},
 );
