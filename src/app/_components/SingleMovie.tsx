@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { MAX_LENGTH_TITLE_MOB, MAX_RATING } from '~/utils/constant';
 import { Star } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { Decimal } from "@prisma/client/runtime/library";
 
 
 type SingleMoviePageProps = {
@@ -22,6 +23,7 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
     const [rating, setRating] = useState(0)
     const [hoveredRating, setHoveredRating] = useState(0)
     const { data: session, status } = useSession();
+    const utils = api.useUtils();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -34,24 +36,38 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
     }, [movie]);
 
 
+
     const mutationVote = api.movieVote.update_movie_vote.useMutation({
-        onSuccess: async () => {
-            await api.useUtils().movieVote.invalidate();
+        onMutate: async (newVote) => {
+            if (!movie) return;
+            movie.vote_count += 1;
+            const prev = utils.movie.getMovie.getData(newVote.movieId);
+            const currentVotes = Number(movie.vote_average) * (movie.vote_count - 1);
+            const newAvg = (currentVotes + newVote.vote) / movie.vote_count;
+            movie.vote_average = parseFloat(newAvg.toFixed(2)) as unknown as Decimal;
+            utils.movie.getMovie.setData(newVote.movieId, movie);
+            return { prev, movieId: newVote.movieId };
+
+
+        },
+
+        onSettled: async (_data, _error, _) => {
+            // Always refetch the affected queries
+            await Promise.all([
+                utils.movieVote.invalidate(),
+                utils.movie.getMovie.invalidate(),
+            ]);
         },
     });
 
+
+
     const updateVote = (vote: number) => {
         if (!movie) return;
-        mutationVote.mutate({ id: movie.id, vote: vote })
+        mutationVote.mutate({ id: movie.MovieVote[0]?.id ?? 0, movieId: movie.id, vote: vote })
         setRating(vote);
     }
-
-    // if (!movie) return <div className="h-full w-full flex justify-center align-middle">
-    //     <Image src={`/rings.svg`} width={300} height={450} alt="Loading" />
-    // </div>;
-
-    // const votePercent = Math.round((Number(movie?.vote_average) / 10) * 100);
-
+    
     return (
         <div className="">
             <Suspense fallback={<Image src={`/rings.svg`} width={300} height={450} alt="Loading" />}>

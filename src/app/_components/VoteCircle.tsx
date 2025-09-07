@@ -5,7 +5,7 @@ export default function VoteCircle({ vote }: { vote: Decimal }) {
     const stroke = 3;
     const normalizedRadius = radius - stroke * 2;
     const circumference = normalizedRadius * 2 * Math.PI;
-    const percent = Math.round(Number(vote) * 10); // TMDB ratings are out of 10 → percent out of 100
+    const percent = Math.round((Number(vote) * 100) / 5);
     const strokeDashoffset = circumference - (percent / 100) * circumference;
 
     return (

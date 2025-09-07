@@ -22,7 +22,7 @@ function MovieCard({ movie }: { movie: MovieVoteList }) {
     });
 
     const updateVote = (vote: number) => {
-        mutationVote.mutate({ id: movie.id, vote: vote })
+        mutationVote.mutate({ id: movie.id, movieId: movie.movieId, vote: vote })
         setRating(vote);
     }
 

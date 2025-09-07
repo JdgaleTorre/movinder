@@ -8,11 +8,11 @@ export default function MovieList() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hover:cursor-pointer max-w-6xl mx-auto ">
             {movies && (
-                <div className="flex flex-col items-center justify-center w-full max-w-md">
+                <>
                     {movies?.map((movie, index) => (
                         <MovieCard movie={movie} key={index} />
                     ))}
-                </div>
+                </>
 
             )}
             {movies == null || movies.length == 0 && (

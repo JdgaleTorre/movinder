@@ -1,4 +1,5 @@
 import { type MovieVote } from "@prisma/client";
+import { type Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { env } from "~/env";
 
@@ -83,7 +84,7 @@ export const movieRouter = createTRPCRouter({
   }),
   getPopularMovies: publicProcedure.query(async ({ ctx }) => {
     const movies = await ctx.db.movie.findMany({
-      orderBy: { vote_count: "desc" },
+      orderBy: { vote_average: "desc" },
       take: 12,
     });
 
