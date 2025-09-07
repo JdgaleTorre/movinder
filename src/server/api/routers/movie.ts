@@ -1,5 +1,4 @@
 import { type MovieVote } from "@prisma/client";
-import { type Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { env } from "~/env";
 
@@ -134,5 +133,19 @@ export const movieRouter = createTRPCRouter({
         return null; // avoid crashing the website
       }
     }),
+  searchMovies: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const movies = await ctx.db.movie.findMany({
+        where: {
+          title: {
+            contains: input,
+            mode: "insensitive",
+          },
+        },
+      });
 
-});
+      return movies ?? null;
+    }),
+  },
+);

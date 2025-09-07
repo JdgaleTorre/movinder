@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { MAX_LENGTH_TITLE_MOB, MAX_RATING } from '~/utils/constant';
 import { Star } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { Decimal } from "@prisma/client/runtime/library";
+import { type Decimal } from "@prisma/client/runtime/library";
 
 
 type SingleMoviePageProps = {
@@ -67,7 +67,7 @@ const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
         mutationVote.mutate({ id: movie.MovieVote[0]?.id ?? 0, movieId: movie.id, vote: vote })
         setRating(vote);
     }
-    
+
     return (
         <div className="">
             <Suspense fallback={<Image src={`/rings.svg`} width={300} height={450} alt="Loading" />}>
