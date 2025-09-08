@@ -149,5 +149,24 @@ export const movieRouter = createTRPCRouter({
 
       return movies ?? null;
     }),
-},
+  wakeServer: publicProcedure
+    .query(async () => {
+      const apiUrl = env.DJANGO_API_URL;
+      try {
+        const res = await fetch(`${apiUrl}/recommendations/ping`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          signal: AbortSignal.timeout(5000), // 5 seconds timeout
+        });
+        if (!res.ok) {
+          console.error("Django API ping error:", res.status, res.statusText);
+          return { success: false };
+        }
+      } catch (error) {
+        console.error("Error pinging Django API:", error);
+        return { success: false };
+      }
+      return { success: true };
+    }),
+  },
 );

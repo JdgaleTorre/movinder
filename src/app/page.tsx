@@ -2,6 +2,7 @@ import { api } from "~/trpc/server";
 import { Suspense } from "react";
 import Image from "next/image";
 import PopularMovies from "./_components/PopularMovies";
+import WakeServer from "./_components/WakeServer";
 
 export default async function Home() {
 
@@ -12,6 +13,7 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center pb-1">
       <div className="container flex flex-col items-center justify-center gap-9 px-4 py-4">
         <div className="flex flex-col top-15 pt-7">
+          <WakeServer />
           <Suspense fallback={<Image src={`/rings.svg`} width={300} height={450} alt="Loading" />}>
             <h3 className="text-2xl font-bold mb-4 text-center">Popular Movies</h3>
             <PopularMovies />
