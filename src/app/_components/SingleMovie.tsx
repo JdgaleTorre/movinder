@@ -17,11 +17,11 @@ type SingleMoviePageProps = {
 
 const SingleMoviePage: React.FC<SingleMoviePageProps> = ({ id }) => {
     const [movie] = api.movie.getMovie.useSuspenseQuery(id);
-    const [similarMovies] = api.movie.getSimilarMovies.useSuspenseQuery(id);
+    const [similarMovies] = api.movie.getSimilarMovies.useSuspenseQuery(id, { retry: 2, staleTime: 1000 * 60 });
     const router = useRouter();
     const starArr = Array.from({ length: MAX_RATING });
-    const [rating, setRating] = useState(0)
-    const [hoveredRating, setHoveredRating] = useState(0)
+    const [rating, setRating] = useState(0);
+    const [hoveredRating, setHoveredRating] = useState(0);
     const { data: session, status } = useSession();
     const utils = api.useUtils();
 

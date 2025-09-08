@@ -110,6 +110,7 @@ export const movieRouter = createTRPCRouter({
         const res = await fetch(`${apiUrl}/recommendations/${input}/10`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          signal: AbortSignal.timeout(5000), // 5 seconds timeout
         });
 
         if (!res.ok) {
