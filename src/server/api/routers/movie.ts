@@ -114,13 +114,13 @@ export const movieRouter = createTRPCRouter({
 
         if (!res.ok) {
           console.error("Django API error:", res.status, res.statusText);
-          return null; // gracefully fallback
+          return []; // gracefully fallback
         }
 
         const similarMovies = (await res.json()) as number[] | null;
 
         if (!similarMovies || similarMovies.length === 0) {
-          return null;
+          return [];
         }
 
         const movies = await ctx.db.movie.findMany({
@@ -130,7 +130,7 @@ export const movieRouter = createTRPCRouter({
         return movies ?? null;
       } catch (err) {
         console.error("Error calling Django API:", err);
-        return null; // avoid crashing the website
+        return []; // avoid crashing the website
       }
     }),
   searchMovies: publicProcedure

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import VoteCircle from "./VoteCircle";
 
-export default function SearchMovieList({input}: {input: string}) {
+export default function SearchMovieList({ input }: { input: string }) {
 
     const [searchResults] = api.movie.searchMovies.useSuspenseQuery(decodeURIComponent(input));
     const router = useRouter();
@@ -25,23 +25,25 @@ export default function SearchMovieList({input}: {input: string}) {
                         unoptimized
                         src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/fallback.jpg"}
                         alt={movie.title}
-                        className="object-cover rounded-t-xl mx-auto"
+                        className="object-cover rounded-t-xl w-full"
                         width={300}
                         height={500}
                     />
 
                     {/* Content */}
-                    <div className=" p-4 flex flex-col space-y-2">
+                    <div className="p-4 flex flex-col space-y-2">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
                             {movie.title}
                         </h3>
                         {/* Circular Vote Average Badge */}
-                        <div className="absolute top-3 left-3">
-                            <VoteCircle vote={movie.vote_average} />
-                        </div>
+                        {/* <div className="absolute top-3 left-3">
+                                <VoteCircle vote={movie.vote_average} />
+                            </div> */}
                     </div>
                 </div>
+
             ))}
         </div>
+
     );
 }

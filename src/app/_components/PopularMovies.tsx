@@ -13,7 +13,7 @@ export default function PopularMovies() {
             {popularMovies?.map(movie => (
                 <div
                     key={movie.id}
-                    className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md  hover:shadow-lg transition duration-300 transform hover:scale-105 pt-4"
+                    className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md  hover:shadow-lg transition duration-300 transform hover:scale-105"
                     onClick={() => {
                         // Handle movie click
                         router.push(`/movie/${movie.movieId}`)
@@ -24,7 +24,7 @@ export default function PopularMovies() {
                         unoptimized
                         src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/fallback.jpg"}
                         alt={movie.title}
-                        className="object-cover rounded-t-xl mx-auto"
+                        className="object-cover rounded-t-xl w-full"
                         width={300}
                         height={500}
                     />
