@@ -168,5 +168,38 @@ export const movieRouter = createTRPCRouter({
       }
       return { success: true };
     }),
+  getHybridRecommendations: protectedProcedure
+    .input(z.number())
+    .query(async ({ ctx, input }) => {
+      const apiUrl = env.DJANGO_API_URL;
+
+      try {
+        const res = await fetch(`${apiUrl}/recommendations/hybrid/${ctx.session?.user.id}/${input}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          signal: AbortSignal.timeout(5000), // 5 seconds timeout
+        });
+
+        if (!res.ok) {
+          console.error("Django API error:", res.status, res.statusText);
+          return []; // gracefully fallback
+        }
+
+        const recommendationsMovies = (await res.json()) as number[] | null;
+
+        if (!recommendationsMovies || recommendationsMovies.length === 0) {
+          return [];
+        }
+
+        const movies = await ctx.db.movie.findMany({
+          where: { movieId: { in: recommendationsMovies } },
+        });
+
+        return movies ?? null;
+      } catch (err) {
+        console.error("Error calling Django API:", err);
+        return []; // avoid crashing the website
+      }
+    }),
   },
 );
