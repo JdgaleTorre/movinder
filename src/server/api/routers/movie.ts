@@ -201,5 +201,23 @@ export const movieRouter = createTRPCRouter({
         return []; // avoid crashing the website
       }
     }),
-  },
+  trainModel: protectedProcedure.query(async () => {
+    const apiUrl = env.DJANGO_API_URL;
+    try {
+      const res = await fetch(`${apiUrl}/train-hybrid-model`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(5000), // 5 seconds timeout
+      });
+      if (!res.ok) {
+        console.error("Django API train error:", res.status, res.statusText);
+        return { success: false };
+      }
+    } catch (error) {
+      console.error("Error calling Django API train:", error);
+      return { success: false };
+    }
+    return { success: true };
+  })
+},
 );
