@@ -4,29 +4,14 @@ import Image from "next/image";
 
 import { useRouter } from "next/navigation";
 import VoteCircle from "./VoteCircle";
-import { useState } from "react";
 
 export default function HybridRecommendations() {
     const [recommendedMovies] = api.movie.getHybridRecommendations.useSuspenseQuery(12, { retry: 2, staleTime: 1000 * 60 });
-    const [enabled, setEnabled] = useState(false);
-    // Hook stays at top level but is conditionally enabled
-    const { data, isLoading } = api.movie.trainModel.useQuery(undefined, {
-        enabled, // only runs when enabled === true
-    });
     const router = useRouter();
 
-    const handleTrainModel = () => {
-        setEnabled(true);
-    }
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hover:cursor-pointer max-w-6xl mx-auto ">
-            <button
-                className="col-span-full mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                onClick={handleTrainModel}
-            >
-                Train Model
-            </button>
             {recommendedMovies?.map(movie => (
                 <div
                     key={movie.id}

@@ -68,6 +68,30 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
   ],
+  events: {
+    async createUser(message) {
+      const { user } = message;
+      // user contains the new user
+      console.log("🆕 New user created:", user);
+      const apiUrl = env.DJANGO_API_URL;
+
+      // Fire your request to Hugging Face or your API:
+      try {
+        const res = await fetch(`${apiUrl}/recommendations/train-hybrid-model`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          signal: AbortSignal.timeout(5000), // 5 seconds timeout
+        });
+        if (!res.ok) {
+          console.error("Django API train error:", res.status, res.statusText);
+        } else {
+          console.log("✅ Fired request to external API");
+        }
+      } catch (err) {
+        console.error("❌ Failed to fire request:", err);
+      }
+    }
+  },
 };
 
 /**
