@@ -204,7 +204,7 @@ export const movieRouter = createTRPCRouter({
   trainModel: protectedProcedure.query(async () => {
     const apiUrl = env.DJANGO_API_URL;
     try {
-      const res = await fetch(`${apiUrl}/train-hybrid-model`, {
+      const res = await fetch(`${apiUrl}/recommendations/train-hybrid-model`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         signal: AbortSignal.timeout(5000), // 5 seconds timeout
